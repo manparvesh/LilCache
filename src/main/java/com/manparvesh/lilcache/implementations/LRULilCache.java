@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class LRULilCache implements LilCache {
 
+    /**************************************************************
+     *                      private variables
+     * ************************************************************/
     private static final int DEFAULT_CACHE_SIZE = 20;
 
     private String eldestElementKey = null;
@@ -24,6 +27,10 @@ public class LRULilCache implements LilCache {
             return cacheOverflow;
         }
     };
+
+    /**************************************************************
+     *                      constructors
+     * ************************************************************/
 
     LRULilCache() {
         cacheSize = DEFAULT_CACHE_SIZE;
@@ -45,6 +52,10 @@ public class LRULilCache implements LilCache {
         this.cacheSize = cacheSize;
     }
 
+    /**************************************************************
+     *                      implementations
+     * ************************************************************/
+
     /**
      * Get size of cache
      *
@@ -65,8 +76,14 @@ public class LRULilCache implements LilCache {
         updateKeyMap(key);
     }
 
+    /**
+     * Updates the position of key in keyMap
+     * and removes eldestElement
+     *
+     * @param key key
+     */
     private void updateKeyMap(String key) {
-        keyMap.put(key, true);
+        keyMap.put(key, delegate.get(key));
         if (eldestElementKey != null) {
             delegate.remove(eldestElementKey);
         }
@@ -80,7 +97,7 @@ public class LRULilCache implements LilCache {
      * @return value from cache
      */
     @Override public Optional<Object> get(String key) {
-        keyMap.get(key);
+        keyMap.get(key); // this is done so that this key is made more accessible by the LinkedHashMap
         return delegate.get(key);
     }
 
